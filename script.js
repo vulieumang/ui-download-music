@@ -31,14 +31,14 @@ $(function () {
  });
 });
 
-const dropdowns = document.querySelectorAll(".dropdown");
-dropdowns.forEach((dropdown) => {
- dropdown.addEventListener("click", (e) => {
-  e.stopPropagation();
-  dropdowns.forEach((c) => c.classList.remove("is-active"));
-  dropdown.classList.add("is-active");
- });
-});
+// const dropdowns = document.querySelectorAll(".dropdown");
+// dropdowns.forEach((dropdown) => {
+//  dropdown.addEventListener("click", (e) => {
+//   e.stopPropagation();
+//   dropdowns.forEach((c) => c.classList.remove("is-active"));
+//   dropdown.classList.add("is-active");
+//  });
+// });
 
 $(".search-bar input")
  .focus(function () {
@@ -114,10 +114,7 @@ btn_download.click(()=>{
   var input_download_val = $('#input_download').val();
   var url_parts = input_download_val.replace(/([^:]\/)\/+/g, "$1").replace(/\/\s*$/,'').split('/');
   if(url_parts[2].includes('zingmp3.vn')){
-    
-    var jqxhr = $.get( API+"link?id="+input_download_val, function() {
-      
-    })
+    var jqxhr = $.get( API+"link?id="+input_download_val, function() {})
       .done(function(res) {
         var artistsNames = getArtistName(res.data)
         list_song.prepend(`
@@ -145,19 +142,10 @@ btn_download.click(()=>{
       })
       .always(function() {
       });
-    
-    // Perform other work here ...
-    
-    // Set another completion function for the request above
-    jqxhr.always(function() {
-      
-    });
+    jqxhr.always(function() {});
   }
   if(url_parts[2].includes('nhaccuatui.com')){
-    
-    var jqxhr = $.get( API+"link?id="+input_download_val, function() {
-      
-    })
+    var jqxhr = $.get( API+"link?id="+input_download_val, function() {})
       .done(function(res) {
         var artistsNames = getArtistName(res.data.song)
         list_song.prepend(`
@@ -185,26 +173,14 @@ btn_download.click(()=>{
       })
       .always(function() {
       });
-    
-    // Perform other work here ...
-    
-    // Set another completion function for the request above
-    jqxhr.always(function() {
-      
-    });
-  }
-
-  
-  console.log(input_download_val)
+  jqxhr.always(function() {});}
 })
 
 
 btn_search.click(()=>{
   loading.show()
   var input_search_val = $('#input_search').val();
-  var jqxhr = $.get( API+"search?id="+input_search_val, function() {
-    
-  })
+  var jqxhr = $.get( API+"search?id="+input_search_val, function() {})
     .done(function(res) {
       var listSong = res.data.data.songs
       var html = '';
@@ -228,27 +204,14 @@ btn_search.click(()=>{
               <button data-source="zing" data-id="${song.encodeId}" class="content-button status-button open js_btn_play">Play</button>
               <button data-source="zing" data-id="${song.encodeId}" data-title="${song.title} - ${artistsNames}" class="js_btn_download content-button status-button ">Download</button>
             </div>
-          </div>`
-        // console.log(song.artists[0].name)
-      });
-      // 
+          </div>`});
       list_song.prepend(html)
-      console.log(res)
-      
-      loading.hide()
-    })
+      loading.hide()})
     .fail(function() {
     })
     .always(function() {
     });
-   
-  // Perform other work here ...
-   
-  // Set another completion function for the request above
-  jqxhr.always(function() {
-    
-  });
-  console.log(input_download_val)
+  jqxhr.always(function() {});
 })
 $('#list_song').click((e)=>{
   if(e.target.closest('.js_btn_download')){
@@ -258,55 +221,40 @@ $('#list_song').click((e)=>{
     }
     if(ele.dataset.source=='nct'){
       downloadURINct(ele.dataset.link, ele.dataset.title)
-    }
-
-    
-    // download(ele.dataset.id, ele.dataset.title)
-  }
+    }}
 })
 var statusPlay = false;
 $('#list_song').click((e)=>{
-  
   if(e.target.closest('.js_btn_play')){
-    
     var ele = e.target.closest('.js_btn_play')
     var card = ele.closest('.app-card')
-    
-    if(ele.dataset.source=='zing'){
+    if(ele.dataset.source=='zing')
       playURI(ele.dataset.id, ele.dataset.title)
-    }
-    if(ele.dataset.source=='nct'){
+    if(ele.dataset.source=='nct')
       playURINct(ele.dataset.link, ele.dataset.title)
-    }
     if(statusPlay){
       card.querySelector('img').classList.add('active')
     }else{
       document.querySelector('img').classList.remove('active')
-    }
-    
-    
-  }
+    }}
 })
 var audio = new Audio()
 function playURI(uri, name) 
 {
-    
-    var link = document.createElement("a");
-    link.setAttribute('download', name);
-    link.href = API+'songUrl?id='+uri;
-    audio.pause();
-    if(document.querySelector('img.active'))
-      document.querySelector('img.active').classList.remove('active')
-    if(audio.src!=link.href){
-      
-      audio = new Audio(link.href)
-      audio.play();
-      statusPlay = true;
-    }else{
-      audio.src='';
-      statusPlay = false;
-      
-    }
+  var link = document.createElement("a");
+  link.setAttribute('download', name);
+  link.href = API+'songUrl?id='+uri;
+  audio.pause();
+  if(document.querySelector('img.active'))
+    document.querySelector('img.active').classList.remove('active')
+  if(audio.src!=link.href){
+    audio = new Audio(link.href)
+    audio.play();
+    statusPlay = true;
+  }else{
+    audio.src='';
+    statusPlay = false;
+  }
 }
 function playURINct(uri, name) 
 {
@@ -315,7 +263,7 @@ function playURINct(uri, name)
     link.href = API+'linkRedirect?id='+uri;
     audio.pause();
     if(document.querySelector('img.active'))
-        document.querySelector('img.active').classList.remove('active')
+      document.querySelector('img.active').classList.remove('active')
     if(audio.src!=link.href){
       audio = new Audio(link.href)
       audio.play();
@@ -327,40 +275,38 @@ function playURINct(uri, name)
 }
 function downloadURI(uri, name) 
 {
-    var link = document.createElement("a");
-    link.setAttribute('download', name);
-    link.href = API+'download?id='+uri
-    console.log(link.href)
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+  var link = document.createElement("a");
+  link.setAttribute('download', name);
+  link.href = API+'download?id='+uri
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
 }
 function downloadURINct(uri, name) 
 {
-    var link = document.createElement("a");
-    link.setAttribute('download', name);
-    link.href = API+'linkRedirect?id='+uri
-    console.log(link.href)
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+  var link = document.createElement("a");
+  link.setAttribute('download', name);
+  link.href = API+'linkRedirect?id='+uri
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
 }
 function downloadXHR(uri, name) {
   axios({
-        url : API+'songUrl?id='+uri,
-        method: 'GET',
-        responseType: 'blob'
+    url : API+'songUrl?id='+uri,
+    method: 'GET',
+    responseType: 'blob'
   })
-        .then((response) => {
-              const url = window.URL
-                    .createObjectURL(new Blob([response.data]));
-              const link = document.createElement('a');
-              link.href = url;
-              link.setAttribute('download', name+'.mp3');
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-        })
+  .then((response) => {
+    const url = window.URL
+      .createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', name+'.mp3');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  })
 }
 
 function getArtistName(song){
@@ -376,6 +322,9 @@ function getArtistName(song){
   }
   else{
     artistsNames = song.artistsNames
+  }
+  if(typeof artistsNames=='object'){
+    artistsNames = artistsNames.name
   }
   return artistsNames;
 }
