@@ -95,6 +95,7 @@ var list_song = $('#list_song .apps-card');
 var input_search = $('#input_search');
 var input_download = $('#input_download');
 var input_download_val = $('#input_download').val('https://zingmp3.vn/album/Bai-Ka-Tuoi-Tre-JGKiD-Emcee-L-KraziNoyze-Linh-Cao/ZOU988OA.html');
+var input_download_val = $('#input_download').val('https://www.nhaccuatui.com/bai-hat/de-vuong-dinh-dung-ft-acv.w8lmuII1Yn2G.html');
 
 // select all when input
 input_download.on("click", function () {
@@ -107,43 +108,89 @@ input_search.on("click", function () {
 btn_download.click(()=>{
   loading.show()
   var input_download_val = $('#input_download').val();
-  var jqxhr = $.get( API+"link?id="+input_download_val, function() {
+  var url_parts = input_download_val.replace(/([^:]\/)\/+/g, "$1").replace(/\/\s*$/,'').split('/');
+  if(url_parts[2].includes('zingmp3.vn')){
     
-  })
-    .done(function(res) {
-      var artistsNames = getArtistName(res.data)
-      list_song.prepend(`
-      <div class="app-card">
-        <div class="song">
-          <span class="cover">
-            <img width="20"
-              src="${res.data.thumbnail}"
-              alt="">
-          </span>
-          <div class="info-song"><span data-title="author">${res.data.title}</span>
-            <div class="app-card__subtext">${artistsNames}</div>
+    var jqxhr = $.get( API+"link?id="+input_download_val, function() {
+      
+    })
+      .done(function(res) {
+        var artistsNames = getArtistName(res.data)
+        list_song.prepend(`
+        <div class="app-card">
+          <div class="song">
+            <span class="cover">
+              <img width="20"
+                src="${res.data.thumbnail}"
+                alt="">
+            </span>
+            <div class="info-song"><span data-title="author">${res.data.title}</span>
+              <div class="app-card__subtext">${artistsNames}</div>
+            </div>
           </div>
-        </div>
 
-        <div class="app-card-buttons">
-          
-          <button data-id="${res.data.id}" class="content-button status-button open js_btn_play">Play</button>
-          <button data-id="${res.data.id}" data-title="${res.data.title} - ${artistsNames}" class="js_btn_download content-button status-button">Download</button>
-        </div>
-      </div>`)
-      loading.hide()
-    })
-    .fail(function() {
-    })
-    .always(function() {
-    });
-   
-  // Perform other work here ...
-   
-  // Set another completion function for the request above
-  jqxhr.always(function() {
+          <div class="app-card-buttons">
+            
+            <button data-source="zing" data-id="${res.data.id}" class="content-button status-button open js_btn_play">Play</button>
+            <button data-source="zing" data-id="${res.data.id}" data-title="${res.data.title} - ${artistsNames}" class="js_btn_download content-button status-button">Download</button>
+          </div>
+        </div>`)
+        loading.hide()
+      })
+      .fail(function() {
+      })
+      .always(function() {
+      });
     
-  });
+    // Perform other work here ...
+    
+    // Set another completion function for the request above
+    jqxhr.always(function() {
+      
+    });
+  }
+  if(url_parts[2].includes('nhaccuatui.com')){
+    
+    var jqxhr = $.get( API+"link?id="+input_download_val, function() {
+      
+    })
+      .done(function(res) {
+        var artistsNames = getArtistName(res.data.song)
+        list_song.prepend(`
+        <div class="app-card">
+          <div class="song">
+            <span class="cover">
+              <img width="20"
+                src="${res.data.song.thumbnail}"
+                alt="">
+            </span>
+            <div class="info-song"><span data-title="author">${res.data.song.title}</span>
+              <div class="app-card__subtext">${artistsNames}</div>
+            </div>
+          </div>
+
+          <div class="app-card-buttons">
+            
+            <button data-source="nct" data-link="${input_download_val}" data-id="${res.data.song.key}" class="content-button status-button open js_btn_play">Play</button>
+            <button data-source="nct" data-link="${input_download_val}" data-id="${res.data.song.key}" data-title="${res.data.song.title} - ${artistsNames}" class="js_btn_download content-button status-button">Download</button>
+          </div>
+        </div>`)
+        loading.hide()
+      })
+      .fail(function() {
+      })
+      .always(function() {
+      });
+    
+    // Perform other work here ...
+    
+    // Set another completion function for the request above
+    jqxhr.always(function() {
+      
+    });
+  }
+
+  
   console.log(input_download_val)
 })
 
@@ -174,8 +221,8 @@ btn_search.click(()=>{
 
             <div class="app-card-buttons">
               
-              <button data-id="${song.encodeId}" class="content-button status-button open">Play</button>
-              <button data-id="${song.encodeId}" data-title="${song.title} - ${artistsNames}" class="js_btn_download content-button status-button ">Download</button>
+              <button data-source="zing" data-id="${song.encodeId}" class="content-button status-button open js_btn_play">Play</button>
+              <button data-source="zing" data-id="${song.encodeId}" data-title="${song.title} - ${artistsNames}" class="js_btn_download content-button status-button ">Download</button>
             </div>
           </div>`
         // console.log(song.artists[0].name)
@@ -202,43 +249,77 @@ btn_search.click(()=>{
 $('#list_song').click((e)=>{
   if(e.target.closest('.js_btn_download')){
     var ele = e.target.closest('.js_btn_download')
-    downloadURI2(ele.dataset.id, ele.dataset.title)
+    if(ele.dataset.source=='zing'){
+      downloadURI(ele.dataset.id, ele.dataset.title)
+    }
+    if(ele.dataset.source=='nct'){
+      downloadURINct(ele.dataset.link, ele.dataset.title)
+    }
+
+    
     // download(ele.dataset.id, ele.dataset.title)
   }
 })
 $('#list_song').click((e)=>{
   if(e.target.closest('.js_btn_play')){
     var ele = e.target.closest('.js_btn_play')
-    downloadURI(ele.dataset.id, ele.dataset.title)
+    if(ele.dataset.source=='zing'){
+      playURI(ele.dataset.id, ele.dataset.title)
+    }
+    if(ele.dataset.source=='nct'){
+      playURINct(ele.dataset.link, ele.dataset.title)
+    }
+    
   }
 })
-
+var audio = new Audio()
+function playURI(uri, name) 
+{
+    var link = document.createElement("a");
+    link.setAttribute('download', name);
+    link.href = API+'songUrl?id='+uri;
+    audio.pause();
+    if(audio.src!=link.href){
+      audio = new Audio(link.href)
+      audio.play();
+    }else{
+      audio.src='';
+    }
+}
+function playURINct(uri, name) 
+{
+    var link = document.createElement("a");
+    link.setAttribute('download', name);
+    link.href = API+'linkRedirect?id='+uri;
+    audio.pause();
+    if(audio.src!=link.href){
+      audio = new Audio(link.href)
+      audio.play();
+    }else{
+      audio.src='';
+    }
+}
 function downloadURI(uri, name) 
 {
     var link = document.createElement("a");
-    // If you don't know the name or want to use
-    // the webserver default set name = ''
-    link.setAttribute('download', name);
-    link.href = API+'songUrl?id='+uri;
-    
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-}
-function downloadURI2(uri, name) 
-{
-    var link = document.createElement("a");
-    // If you don't know the name or want to use
-    // the webserver default set name = ''
     link.setAttribute('download', name);
     link.href = API+'download?id='+uri
-    // link.href = API+'songUrl?id='+uri+'&filename='+name+'.mp3'
     console.log(link.href)
     document.body.appendChild(link);
     link.click();
     link.remove();
 }
-function download(uri, name) {
+function downloadURINct(uri, name) 
+{
+    var link = document.createElement("a");
+    link.setAttribute('download', name);
+    link.href = API+'linkRedirect?id='+uri
+    console.log(link.href)
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
+function downloadXHR(uri, name) {
   axios({
         url : API+'songUrl?id='+uri,
         method: 'GET',
