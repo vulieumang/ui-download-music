@@ -111,6 +111,7 @@ btn_download.click(()=>{
     
   })
     .done(function(res) {
+      var artistsNames = getArtistName(res.data)
       list_song.prepend(`
       <div class="app-card">
         <div class="song">
@@ -119,15 +120,15 @@ btn_download.click(()=>{
               src="${res.data.thumbnail}"
               alt="">
           </span>
-          <div class="info-song"><span data-title="author">${res.data.artistsNames}</span>
-            <div class="app-card__subtext">${res.data.title}</div>
+          <div class="info-song"><span data-title="author">${res.data.title}</span>
+            <div class="app-card__subtext">${artistsNames}</div>
           </div>
         </div>
 
         <div class="app-card-buttons">
           
-          <button data-link="${res.data.data[128]}" class="content-button status-button open">Play</button>
-          <button data-link="${res.data.data[128]}" data-title="${res.data.title} - ${res.data.artistsNames}" class="js_btn_download content-button status-button">Download</button>
+          <button data-id="${res.data.id}" class="content-button status-button open js_btn_play">Play</button>
+          <button data-id="${res.data.id}" data-title="${res.data.title} - ${res.data.artistsNames}" class="js_btn_download content-button status-button">Download</button>
         </div>
       </div>`)
       loading.hide()
@@ -156,16 +157,8 @@ btn_search.click(()=>{
     .done(function(res) {
       var listSong = res.data.data.songs
       var html = '';
-      var artistsNames;
       listSong.forEach(song => {
-        if(song.artistsNames){
-          artistsNames = song.artistsNames
-        }
-        else{
-          artistsNames = song.artists.reduce(function(previous, current){
-            return previous.name + ', ' + current.name;
-        })
-        }
+        var artistsNames = getArtistName(song)
         html +=`
           <div class="app-card">
             <div class="song">
@@ -182,7 +175,7 @@ btn_search.click(()=>{
             <div class="app-card-buttons">
               
               <button data-id="${song.encodeId}" class="content-button status-button open">Play</button>
-              <button data-id="${song.encodeId}" data-title="${song.title} - ${res.data.artistsNames}" class="js_btn_download content-button status-button">Download</button>
+              <button data-id="${song.encodeId}" data-title="${song.title} - ${res.data.artistsNames}" class="js_btn_download content-button status-button ">Download</button>
             </div>
           </div>`
         // console.log(song.artists[0].name)
@@ -209,8 +202,13 @@ btn_search.click(()=>{
 $('#list_song').click((e)=>{
   if(e.target.closest('.js_btn_download')){
     var ele = e.target.closest('.js_btn_download')
-    console.log(ele.dataset.link)
-    downloadURI(ele.dataset.link, ele.dataset.title)
+    download(ele.dataset.id, ele.dataset.title)
+  }
+})
+$('#list_song').click((e)=>{
+  if(e.target.closest('.js_btn_play')){
+    var ele = e.target.closest('.js_btn_play')
+    downloadURI(ele.dataset.id, ele.dataset.title)
   }
 })
 
@@ -220,8 +218,40 @@ function downloadURI(uri, name)
     // If you don't know the name or want to use
     // the webserver default set name = ''
     link.setAttribute('download', name);
-    link.href = uri;
+    link.href = API+'songUrl?id='+uri;
+    
     document.body.appendChild(link);
     link.click();
     link.remove();
+}
+
+function download(uri, name) {
+  axios({
+        url : API+'songUrl?id='+uri,
+        method: 'GET',
+        responseType: 'blob'
+  })
+        .then((response) => {
+              const url = window.URL
+                    .createObjectURL(new Blob([response.data]));
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', name+'.mp3');
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+        })
+}
+
+function getArtistName(song){
+  var artistsNames;
+  if(song.artistsNames){
+    artistsNames = song.artistsNames
+  }
+  else{
+    artistsNames = song.artists.reduce(function(previous, current){
+      return previous.name + ', ' + current.name;
+  })
+  }
+  return artistsNames;
 }

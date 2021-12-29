@@ -492,6 +492,7 @@ body.light-mode:before {
   display: flex;
   align-items: center;
   margin: 0;
+  font-weight: 800;
 }
 .img-content svg {
   width: 28px;
