@@ -264,6 +264,7 @@ $('#list_song').click((e)=>{
     // download(ele.dataset.id, ele.dataset.title)
   }
 })
+var statusPlay = false;
 $('#list_song').click((e)=>{
   
   if(e.target.closest('.js_btn_play')){
@@ -277,7 +278,13 @@ $('#list_song').click((e)=>{
     if(ele.dataset.source=='nct'){
       playURINct(ele.dataset.link, ele.dataset.title)
     }
-    card.querySelector('img').classList.toggle('active')
+    if(statusPlay){
+      card.querySelector('img').classList.add('active')
+    }else{
+      document.querySelector('img').classList.remove('active')
+    }
+    
+    
   }
 })
 var audio = new Audio()
@@ -288,14 +295,16 @@ function playURI(uri, name)
     link.setAttribute('download', name);
     link.href = API+'songUrl?id='+uri;
     audio.pause();
-    
+    if(document.querySelector('img.active'))
+      document.querySelector('img.active').classList.remove('active')
     if(audio.src!=link.href){
-      document.querySelector('img').classList.remove('active')
+      
       audio = new Audio(link.href)
       audio.play();
+      statusPlay = true;
     }else{
       audio.src='';
-      
+      statusPlay = false;
       
     }
 }
@@ -305,11 +314,15 @@ function playURINct(uri, name)
     link.setAttribute('download', name);
     link.href = API+'linkRedirect?id='+uri;
     audio.pause();
+    if(document.querySelector('img.active'))
+        document.querySelector('img.active').classList.remove('active')
     if(audio.src!=link.href){
       audio = new Audio(link.href)
       audio.play();
+      statusPlay = true;
     }else{
       audio.src='';
+      statusPlay = false;
     }
 }
 function downloadURI(uri, name) 
