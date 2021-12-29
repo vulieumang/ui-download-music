@@ -926,3 +926,15 @@ body.light-mode:before {
 .search-nct, .search-youtube{
   display: none;
 }
+@keyframes cd-run-animation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.cover img.active{
+  animation: cd-run-animation infinite 20s linear;
+  border-radius: 50%;
+}

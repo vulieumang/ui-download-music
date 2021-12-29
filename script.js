@@ -265,8 +265,12 @@ $('#list_song').click((e)=>{
   }
 })
 $('#list_song').click((e)=>{
+  
   if(e.target.closest('.js_btn_play')){
+    document.querySelector('img').classList.remove('active')
     var ele = e.target.closest('.js_btn_play')
+    var card = ele.closest('.app-card')
+    card.querySelector('img').classList.toggle('active')
     if(ele.dataset.source=='zing'){
       playURI(ele.dataset.id, ele.dataset.title)
     }
@@ -283,11 +287,13 @@ function playURI(uri, name)
     link.setAttribute('download', name);
     link.href = API+'songUrl?id='+uri;
     audio.pause();
+    
     if(audio.src!=link.href){
       audio = new Audio(link.href)
       audio.play();
     }else{
       audio.src='';
+      
     }
 }
 function playURINct(uri, name) 
