@@ -934,6 +934,9 @@ body.light-mode:before {
     transform: rotate(360deg);
   }
 }
+.cover img{
+  max-width: unset;
+}
 .cover img.active{
   animation: cd-run-animation infinite 20s linear;
   border-radius: 50%;
