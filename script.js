@@ -1,5 +1,5 @@
 // const API = 'http://192.168.1.88:3000/api/'
-const API = 'https://api-zingmp3-nct.vercel.app/api/'
+const API = 'https://zingmp3nct.tienvu.net /api/'
 var loading = $('#loading');
 $(function () {
  $(".menu-link").click(function () {
