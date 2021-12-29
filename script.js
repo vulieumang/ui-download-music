@@ -1,5 +1,8 @@
-const API = 'http://192.168.1.88:3000/api/'
-// const API = 'https://zingmp3nct.tienvu.net/api/'
+if (location.hostname === "localhost" || location.hostname === "127.0.0.1"){
+  const API = 'http://192.168.1.88:3000/api/'
+}else{
+  const API = 'https://zingmp3nct.tienvu.net/api/'
+}
 var loading = $('#loading');
 $(function () {
  $(".menu-link").click(function () {
