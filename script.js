@@ -1,5 +1,5 @@
-// const API = 'http://192.168.1.88:3000/api/'
-const API = 'https://zingmp3nct.tienvu.net/api/'
+const API = 'http://192.168.1.88:3000/api/'
+// const API = 'https://zingmp3nct.tienvu.net/api/'
 var loading = $('#loading');
 $(function () {
  $(".menu-link").click(function () {
@@ -128,7 +128,7 @@ btn_download.click(()=>{
         <div class="app-card-buttons">
           
           <button data-id="${res.data.id}" class="content-button status-button open js_btn_play">Play</button>
-          <button data-id="${res.data.id}" data-title="${res.data.title} - ${res.data.artistsNames}" class="js_btn_download content-button status-button">Download</button>
+          <button data-id="${res.data.id}" data-title="${res.data.title} - ${artistsNames}" class="js_btn_download content-button status-button">Download</button>
         </div>
       </div>`)
       loading.hide()
@@ -175,7 +175,7 @@ btn_search.click(()=>{
             <div class="app-card-buttons">
               
               <button data-id="${song.encodeId}" class="content-button status-button open">Play</button>
-              <button data-id="${song.encodeId}" data-title="${song.title} - ${res.data.artistsNames}" class="js_btn_download content-button status-button ">Download</button>
+              <button data-id="${song.encodeId}" data-title="${song.title} - ${artistsNames}" class="js_btn_download content-button status-button ">Download</button>
             </div>
           </div>`
         // console.log(song.artists[0].name)
@@ -202,7 +202,8 @@ btn_search.click(()=>{
 $('#list_song').click((e)=>{
   if(e.target.closest('.js_btn_download')){
     var ele = e.target.closest('.js_btn_download')
-    download(ele.dataset.id, ele.dataset.title)
+    downloadURI2(ele.dataset.id, ele.dataset.title)
+    // download(ele.dataset.id, ele.dataset.title)
   }
 })
 $('#list_song').click((e)=>{
@@ -224,7 +225,19 @@ function downloadURI(uri, name)
     link.click();
     link.remove();
 }
-
+function downloadURI2(uri, name) 
+{
+    var link = document.createElement("a");
+    // If you don't know the name or want to use
+    // the webserver default set name = ''
+    link.setAttribute('download', name);
+    link.href = API+'download?id='+uri
+    // link.href = API+'songUrl?id='+uri+'&filename='+name+'.mp3'
+    console.log(link.href)
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}
 function download(uri, name) {
   axios({
         url : API+'songUrl?id='+uri,
@@ -245,13 +258,17 @@ function download(uri, name) {
 
 function getArtistName(song){
   var artistsNames;
-  if(song.artistsNames){
-    artistsNames = song.artistsNames
+  if(song.artists){
+    artistsNames = song.artists.reduce(function(previous, current){
+      if(previous.name){
+        previous = previous.name
+      }
+      return previous + ', ' + current.name;
+    })
+    
   }
   else{
-    artistsNames = song.artists.reduce(function(previous, current){
-      return previous.name + ', ' + current.name;
-  })
+    artistsNames = song.artistsNames
   }
   return artistsNames;
 }
