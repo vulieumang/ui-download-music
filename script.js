@@ -1,8 +1,11 @@
 let API;
+let API_NCT;
 if (location.hostname === "localhost" || location.hostname === "127.0.0.1"){
   API = 'http://192.168.1.88:3000/api/'
+  API_NCT = 'http://192.168.1.88:3000/api/'
 }else{
   API = 'https://zingmp3nct.tienvu.net/api/'
+  API_NCT = 'https://api-zingmp3-nct.vercel.app/api/'
 }
 var loading = $('#loading');
 $(function () {
@@ -149,7 +152,7 @@ btn_download.click(()=>{
     jqxhr.always(function() {});
   }
   if(url_parts[2].includes('nhaccuatui.com')){
-    var jqxhr = $.get( API+"link?id="+input_download_val, function() {})
+    var jqxhr = $.get( API_NCT+"link?id="+input_download_val, function() {})
       .done(function(res) {
         var artistsNames = getArtistName(res.data.song)
         list_song.prepend(`
@@ -257,7 +260,7 @@ function playURI(uri, source, link)
     streamURL = API+'songUrl?id='+uri;
   }
   if(source=='nct'){
-    streamURL = API+'linkRedirect?id='+link;
+    streamURL = API_NCT+'linkRedirect?id='+link;
   }
   audio.pause();
   if(document.querySelector('img.active'))
