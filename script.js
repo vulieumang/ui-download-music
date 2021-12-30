@@ -227,15 +227,25 @@ var statusPlay = false;
 $('#list_song').click((e)=>{
   if(e.target.closest('.js_btn_play')){
     var ele = e.target.closest('.js_btn_play')
+    setAllPauseToPlay()
     toggleText(ele, 'Play', 'Pause')
     var card = ele.closest('.app-card')
     playURI(ele.dataset.id, ele.dataset.source, ele.dataset.link)
+    // remove active all, if current play stop, if current pause play and add active class
     if(statusPlay){
       card.querySelector('img').classList.add('active')
     }else{
       document.querySelector('img').classList.remove('active')
+      toggleText(ele, 'Play', 'Pause')
+      
     }}
 })
+function setAllPauseToPlay(){
+  var listEle = document.querySelectorAll('.js_btn_play')
+  listEle.forEach(element => {
+    element.innerHTML = 'Play';
+  });
+}
 var audio = new Audio()
 function playURI(uri, source, link) 
 {
