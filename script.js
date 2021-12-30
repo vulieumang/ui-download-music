@@ -99,7 +99,7 @@ var list_song = $('#list_song .apps-card');
 var input_search = $('#input_search');
 var input_download = $('#input_download');
 var input_download_val = $('#input_download').val('https://zingmp3.vn/album/Bai-Ka-Tuoi-Tre-JGKiD-Emcee-L-KraziNoyze-Linh-Cao/ZOU988OA.html');
-// var input_download_val = $('#input_download').val('https://www.nhaccuatui.com/bai-hat/de-vuong-dinh-dung-ft-acv.w8lmuII1Yn2G.html');
+var input_download_val = $('#input_download').val('https://www.nhaccuatui.com/bai-hat/de-vuong-dinh-dung-ft-acv.w8lmuII1Yn2G.html');
 
 // select all when input
 input_download.on("click", function () {
@@ -227,11 +227,9 @@ var statusPlay = false;
 $('#list_song').click((e)=>{
   if(e.target.closest('.js_btn_play')){
     var ele = e.target.closest('.js_btn_play')
+    toggleText(ele, 'Play', 'Pause')
     var card = ele.closest('.app-card')
-    if(ele.dataset.source=='zing')
-      playURI(ele.dataset.id, ele.dataset.title)
-    if(ele.dataset.source=='nct')
-      playURINct(ele.dataset.link, ele.dataset.title)
+    playURI(ele.dataset.id, ele.dataset.source, ele.dataset.link)
     if(statusPlay){
       card.querySelector('img').classList.add('active')
     }else{
@@ -239,39 +237,26 @@ $('#list_song').click((e)=>{
     }}
 })
 var audio = new Audio()
-function playURI(uri, name) 
+function playURI(uri, source, link) 
 {
-  var link = document.createElement("a");
-  link.setAttribute('download', name);
-  link.href = API+'songUrl?id='+uri;
+  var streamURL;
+  if(source=='zing'){
+    streamURL = API+'songUrl?id='+uri;
+  }
+  if(source=='nct'){
+    streamURL = API+'linkRedirect?id='+link;
+  }
   audio.pause();
   if(document.querySelector('img.active'))
     document.querySelector('img.active').classList.remove('active')
-  if(audio.src!=link.href){
-    audio = new Audio(link.href)
+  if(audio.src!=streamURL){
+    audio = new Audio(streamURL)
     audio.play();
     statusPlay = true;
   }else{
     audio.src='';
     statusPlay = false;
   }
-}
-function playURINct(uri, name) 
-{
-    var link = document.createElement("a");
-    link.setAttribute('download', name);
-    link.href = API+'linkRedirect?id='+uri;
-    audio.pause();
-    if(document.querySelector('img.active'))
-      document.querySelector('img.active').classList.remove('active')
-    if(audio.src!=link.href){
-      audio = new Audio(link.href)
-      audio.play();
-      statusPlay = true;
-    }else{
-      audio.src='';
-      statusPlay = false;
-    }
 }
 function downloadURI(uri, name) 
 {
@@ -327,4 +312,8 @@ function getArtistName(song){
     artistsNames = artistsNames.name
   }
   return artistsNames;
+}
+
+function toggleText(ele, oldStr, newStr){
+  ele.innerHTML==oldStr? ele.innerHTML =newStr : ele.innerHTML= oldStr
 }
