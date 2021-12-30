@@ -18,15 +18,20 @@ $(function () {
   $(this).addClass("is-active");
   if($(this).hasClass('zing')){
     $('.search-box ').hide()
+    $('#input_download').val('https://zingmp3.vn/album/Bai-Ka-Tuoi-Tre-JGKiD-Emcee-L-KraziNoyze-Linh-Cao/ZOU988OA.html');
+
     $('.search-zing').show()
   }
   if($(this).hasClass('nct')){
     $('.search-box ').hide()
     $('.search-nct').show()
+    $('#input_download').val('https://www.nhaccuatui.com/bai-hat/de-vuong-dinh-dung-ft-acv.w8lmuII1Yn2G.html');
+
   }
   if($(this).hasClass('youtube')){
     $('.search-box ').hide()
     $('.search-youtube').show()
+    $('#input_download').val('https://www.youtube.com');
   }
  });
 });
@@ -99,7 +104,6 @@ var list_song = $('#list_song .apps-card');
 var input_search = $('#input_search');
 var input_download = $('#input_download');
 var input_download_val = $('#input_download').val('https://zingmp3.vn/album/Bai-Ka-Tuoi-Tre-JGKiD-Emcee-L-KraziNoyze-Linh-Cao/ZOU988OA.html');
-var input_download_val = $('#input_download').val('https://www.nhaccuatui.com/bai-hat/de-vuong-dinh-dung-ft-acv.w8lmuII1Yn2G.html');
 
 // select all when input
 input_download.on("click", function () {
