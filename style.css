@@ -936,8 +936,12 @@ body.light-mode:before {
 }
 .cover img{
   max-width: unset;
+  -webkit-transition: all 200ms ease-in-out;
+transition: all 200ms ease-in-out;
 }
 .cover img.active{
-  animation: cd-run-animation infinite 20s linear;
+  animation: cd-run-animation infinite 24s linear;
   border-radius: 50%;
+  -webkit-transition: all 200ms ease-in-out;
+transition: all 200ms ease-in-out;
 }

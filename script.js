@@ -227,9 +227,9 @@ var statusPlay = false;
 $('#list_song').click((e)=>{
   if(e.target.closest('.js_btn_play')){
     var ele = e.target.closest('.js_btn_play')
+    var card = ele.closest('.app-card')
     setAllPauseToPlay()
     toggleText(ele, 'Play', 'Pause')
-    var card = ele.closest('.app-card')
     playURI(ele.dataset.id, ele.dataset.source, ele.dataset.link)
     // remove active all, if current play stop, if current pause play and add active class
     if(statusPlay){
@@ -237,7 +237,6 @@ $('#list_song').click((e)=>{
     }else{
       document.querySelector('img').classList.remove('active')
       toggleText(ele, 'Play', 'Pause')
-      
     }}
 })
 function setAllPauseToPlay(){
