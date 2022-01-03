@@ -146,6 +146,7 @@ btn_download.click(()=>{
         loading.hide()
       })
       .fail(function() {
+        alert('Có lỗi, thử tải lại trang')
       })
       .always(function() {
       });
@@ -177,6 +178,7 @@ btn_download.click(()=>{
         loading.hide()
       })
       .fail(function() {
+        alert('Có lỗi, thử tải lại trang')
       })
       .always(function() {
       });
