@@ -4,7 +4,7 @@ if (location.hostname === "localhost" || location.hostname === "127.0.0.1"){
   API = 'http://192.168.1.88:3000/api/'
   API_NCT = 'http://192.168.1.88:3000/api/'
 }else{
-  API = 'https://zingmp3nct.tienvu.net/api/'
+  API = 'https://musicapi.versionofyou.com/api/'
   API_NCT = 'https://api-zingmp3-nct.vercel.app/api/'
 }
 var loading = $('#loading');
