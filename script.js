@@ -5,7 +5,7 @@ if (location.hostname === "localhost" || location.hostname === "127.0.0.1"){
   API_NCT = 'http://192.168.1.88:3000/api/'
 }else{
   API = 'https://musicapi.versionofyou.com/api/'
-  API_NCT = 'https://api-zingmp3-nct.vercel.app/api/'
+  API_NCT = 'https://musicapivercel.versionofyou.com/api/'
 }
 var loading = $('#loading');
 $(function () {
@@ -14,6 +14,8 @@ $(function () {
   $(this).addClass("is-active");
  });
 });
+
+
 
 $(function () {
  $(".main-header-link").click(function () {
@@ -289,7 +291,7 @@ function downloadURINct(uri, name)
 {
   var link = document.createElement("a");
   link.setAttribute('download', name);
-  link.href = API+'linkRedirect?id='+uri
+  link.href = API_NCT+'linkRedirect?id='+uri
   document.body.appendChild(link);
   link.click();
   link.remove();
